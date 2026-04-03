@@ -134,3 +134,32 @@ def test_parse_cards_japanese_korean():
     cards = parse_cards(text)
     assert len(cards) == 1
     assert cards[0].tags == ["言語::日本語"]
+
+
+def test_parse_cards_double_pipe_skipped():
+    """Double pipe resulting in empty field should be skipped."""
+    text = "Q || | tags\n"
+    cards = parse_cards(text)
+    assert len(cards) == 0
+
+
+def test_parse_cards_empty_tags_field():
+    """Empty tags field should produce empty tags list."""
+    text = "Q | A | \n"
+    cards = parse_cards(text)
+    assert len(cards) == 1
+    assert cards[0].tags == []
+
+
+def test_parse_cards_no_tags_field():
+    """Line with only one pipe (no tags field) should be skipped."""
+    text = "Q | A\n"
+    cards = parse_cards(text)
+    assert len(cards) == 0
+
+
+def test_parse_cards_multiple_nidd():
+    """Only the last nidd should be extracted."""
+    card = Card(question="Q", answer="A nidd111<br><br>nidd222", tags=[])
+    assert card.nidd == "nidd222"
+    assert "nidd111" in card.answer_clean
