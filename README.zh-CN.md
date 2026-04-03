@@ -1,6 +1,6 @@
 # anki-expert
 
-一个 AI 编程助手技能插件，从文本或本地文件生成高质量 Anki 闪卡，自动导出为 `.tsv` 或 `.apkg` 格式。
+AI 驱动的 Anki 闪卡生成器 — 支持 Claude Code、Cursor、Copilot CLI、Gemini CLI、Codex 和 OpenCode 等多平台插件。导出 `.tsv` / `.apkg` 格式，支持 HTML 排版、层级标签和中日韩文字。
 
 [English](README.md)
 
@@ -13,6 +13,7 @@
 - **智能排版** — 成本感知的格式强调（加粗 / 斜体 / 标黄）
 - **层级标签** — 多级 `::` 分隔标签，构建知识体系
 - **nidd 追踪** — 来源编号导出时自动从答案剥离，移入标签字段
+- **填空题（Cloze）** — `{{c1::答案}}` 语法，支持挖空填写式卡片
 
 ## 安装
 
@@ -147,6 +148,31 @@ cat cards.txt | anki-export - -f tsv -o output.tsv
 ### nidd 编号
 
 每张卡片答案末尾的 `nidd` + 数字用于关联原始文本来源。导出时自动从答案中剥离，移入 Anki 标签字段。
+
+## 常见问题
+
+**`anki-export: command not found`**
+确保已安装：`pip install git+https://github.com/gong1414/anki-card-skill.git`。如使用虚拟环境，请确认已激活。
+
+**`Error: no cards parsed from input`**
+检查输入是否符合管道分隔格式：`问题 | 答案 | 标签`。每行需要恰好两个 `|` 分隔符。
+
+**`Error: file not found`**
+检查输入文件路径。相对路径从当前工作目录解析。
+
+## Python API
+
+```python
+from anki_skill.parser import parse_cards
+from anki_skill.exporters import export_tsv, export_apkg
+from pathlib import Path
+
+text = "什么是 DNA？ | 脱氧核糖核酸 | 生物学::遗传学\n"
+cards = parse_cards(text)
+
+export_tsv(cards, Path("output.tsv"))
+export_apkg(cards, Path("output.apkg"), deck_name="生物学")
+```
 
 ## 许可证
 
