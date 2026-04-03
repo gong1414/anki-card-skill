@@ -23,7 +23,7 @@ class Card:
     @property
     def answer_clean(self) -> str:
         """Answer with trailing nidd stripped."""
-        return re.sub(r"(<br\s*/?>)*\s*nidd\d+\s*$", "", self.answer).rstrip()
+        return re.sub(r"(\s*<br\s*/?>)*\s*nidd\d+\s*$", "", self.answer).rstrip()
 
     @property
     def tags_string(self) -> str:

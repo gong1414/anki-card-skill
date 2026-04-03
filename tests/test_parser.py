@@ -12,6 +12,26 @@ def test_card_creation():
     assert card.tags == ["计算机科学::算法::图论::最短路径"]
 
 
+def test_card_nidd_extraction():
+    card = Card(question="Q", answer="A<br><br>nidd1743696000000", tags=[])
+    assert card.nidd == "nidd1743696000000"
+
+
+def test_card_nidd_empty():
+    card = Card(question="Q", answer="No nidd here", tags=[])
+    assert card.nidd == ""
+
+
+def test_card_answer_clean():
+    card = Card(question="Q", answer="A<br><br>nidd123", tags=[])
+    assert card.answer_clean == "A"
+
+
+def test_card_answer_clean_no_nidd():
+    card = Card(question="Q", answer="Just an answer", tags=[])
+    assert card.answer_clean == "Just an answer"
+
+
 def test_card_tags_as_string():
     card = Card(
         question="Q",

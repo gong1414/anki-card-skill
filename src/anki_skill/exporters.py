@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 from pathlib import Path
 
 import genanki
@@ -50,7 +51,7 @@ def export_apkg(
     deck_name: str = "AnkiSkill Export",
 ) -> None:
     """Export cards to .apkg format using genanki."""
-    deck_id = abs(hash(deck_name)) % (2**31)
+    deck_id = int(hashlib.sha256(deck_name.encode()).hexdigest(), 16) % (2**31)
     deck = genanki.Deck(deck_id, deck_name)
 
     for card in cards:

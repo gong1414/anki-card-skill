@@ -40,8 +40,11 @@ def _is_header_line(line: str) -> bool:
     stripped = line.replace("|", "").replace("-", "").strip()
     if not stripped:
         return True
+    # Only match exact header rows like "问题 | 答案 | 标签"
     lower = line.lower()
-    if lower.startswith("问题") or lower.startswith("question"):
+    if (lower.startswith("问题") or lower.startswith("question")) and (
+        "答案" in lower or "answer" in lower or "标签" in lower or "tag" in lower
+    ):
         return True
     return False
 
