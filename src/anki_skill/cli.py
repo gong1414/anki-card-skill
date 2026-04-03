@@ -54,12 +54,20 @@ def main(argv: list[str] | None = None) -> None:
         sys.exit(2)
 
     output_path = Path(args.output)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+    except OSError as e:
+        print(f"Error: cannot create output directory: {e}", file=sys.stderr)
+        sys.exit(3)
 
-    if args.format == "tsv":
-        export_tsv(cards, output_path)
-    else:
-        export_apkg(cards, output_path, deck_name=args.deck_name)
+    try:
+        if args.format == "tsv":
+            export_tsv(cards, output_path)
+        else:
+            export_apkg(cards, output_path, deck_name=args.deck_name)
+    except OSError as e:
+        print(f"Error: cannot write output file: {e}", file=sys.stderr)
+        sys.exit(3)
 
     print(f"Exported {len(cards)} cards to {output_path}", file=sys.stderr)
 

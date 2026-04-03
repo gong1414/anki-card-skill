@@ -77,3 +77,16 @@ def test_cli_empty_input_exits_nonzero():
     result = _run_cli(str(path), "-f", "tsv", "-o", "/tmp/out.tsv")
     assert result.returncode == 2
     path.unlink()
+
+
+def test_cli_output_dir_permission_denied(tmp_path):
+    """CLI should exit gracefully when output directory is not writable."""
+    input_file = FIXTURES / "sample_cards.txt"
+    import platform
+    if platform.system() == "Darwin":
+        bad_output = "/private/var/audit/fakedir/out.tsv"
+    else:
+        bad_output = "/proc/fakedir/out.tsv"
+    result = _run_cli(str(input_file), "-f", "tsv", "-o", bad_output)
+    assert result.returncode == 3
+    assert "error" in result.stderr.lower()
