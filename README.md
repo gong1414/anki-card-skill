@@ -1,6 +1,6 @@
 # anki-expert
 
-A Claude Code skill for generating high-quality Anki flashcards from text or local files, with automatic export to `.tsv` or `.apkg` format.
+AI-powered Anki flashcard generator — works as a skill/plugin for Claude Code, Cursor, Copilot CLI, Gemini CLI, Codex & OpenCode. Exports to `.tsv` / `.apkg` with HTML formatting, hierarchical tags, and CJK support.
 
 [中文文档](README.zh-CN.md)
 
@@ -13,6 +13,7 @@ A Claude Code skill for generating high-quality Anki flashcards from text or loc
 - **Smart formatting** — cost-aware emphasis (bold / italic / highlight)
 - **Hierarchical tags** — multi-level `::` separated tags for structured knowledge
 - **nidd tracking** — source identifiers auto-stripped from answers and moved to tags
+- **Cloze deletion** — `{{c1::answer}}` syntax for fill-in-the-blank cards
 
 ## Installation
 
@@ -130,6 +131,31 @@ Pipe-delimited, three fields:
 **Tags:** hierarchical with `::` — e.g. `计算机科学::算法::图论::最短路径`
 
 **nidd:** Source tracking identifiers (e.g. `nidd1726052151484`) are automatically stripped from card answers during export and moved to the Anki tags field.
+
+## Troubleshooting
+
+**`anki-export: command not found`**
+Ensure the package is installed: `pip install git+https://github.com/gong1414/anki-card-skill.git`. If using a virtual environment, make sure it's activated.
+
+**`Error: no cards parsed from input`**
+Check that your input follows the pipe-delimited format: `question | answer | tags`. Each line needs exactly two `|` separators.
+
+**`Error: file not found`**
+Verify the input file path. Relative paths are resolved from the current working directory.
+
+## Python API
+
+```python
+from anki_skill.parser import parse_cards
+from anki_skill.exporters import export_tsv, export_apkg
+from pathlib import Path
+
+text = "What is DNA? | Deoxyribonucleic acid | biology::genetics\n"
+cards = parse_cards(text)
+
+export_tsv(cards, Path("output.tsv"))
+export_apkg(cards, Path("output.apkg"), deck_name="Biology")
+```
 
 ## License
 
