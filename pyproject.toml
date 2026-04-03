@@ -5,13 +5,31 @@ build-backend = "hatchling.build"
 [project]
 name = "anki-skill"
 version = "0.1.0"
-description = "Claude Code skill for generating and exporting Anki flashcards"
+description = "AI-powered Anki flashcard generator — exports to .tsv/.apkg with HTML formatting, hierarchical tags, and CJK support"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.10"
+keywords = ["anki", "flashcards", "spaced-repetition", "study", "education", "learning"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Education",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+    "Topic :: Education",
+]
 dependencies = [
     "genanki>=0.13.1",
 ]
+
+[project.urls]
+Homepage = "https://github.com/gong1414/anki-card-skill"
+Repository = "https://github.com/gong1414/anki-card-skill.git"
+Issues = "https://github.com/gong1414/anki-card-skill/issues"
 
 [project.scripts]
 anki-export = "anki_skill.cli:main"
