@@ -9,3 +9,4 @@ build/
 *.apkg
 *.tsv
 docs/
+CLAUDE.md
