@@ -2,7 +2,27 @@ import tempfile
 from pathlib import Path
 
 from anki_skill.models import Card
-from anki_skill.exporters import export_tsv
+from anki_skill.exporters import export_tsv, _sanitize_tsv
+
+
+def test_sanitize_tsv_removes_tabs():
+    assert _sanitize_tsv("hello\tworld") == "hello world"
+
+
+def test_sanitize_tsv_converts_newlines_to_br():
+    assert _sanitize_tsv("line1\nline2") == "line1<br>line2"
+
+
+def test_sanitize_tsv_removes_carriage_return():
+    assert _sanitize_tsv("line1\r\nline2") == "line1<br>line2"
+
+
+def test_sanitize_tsv_handles_mixed():
+    assert _sanitize_tsv("a\tb\nc\r\nd") == "a b<br>c<br>d"
+
+
+def test_sanitize_tsv_passthrough_clean_string():
+    assert _sanitize_tsv("<b>hello</b>") == "<b>hello</b>"
 
 
 def _sample_cards() -> list[Card]:
