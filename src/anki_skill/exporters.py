@@ -17,7 +17,10 @@ def export_tsv(cards: list[Card], output_path: Path) -> None:
     """
     with open(output_path, "w", encoding="utf-8") as f:
         for card in cards:
-            line = f"{card.question}\t{card.answer}\t{card.tags_string}\n"
+            tags = card.tags_string
+            if card.nidd:
+                tags = f"{tags} {card.nidd}".strip()
+            line = f"{card.question}\t{card.answer_clean}\t{tags}\n"
             f.write(line)
 
 
@@ -51,10 +54,13 @@ def export_apkg(
     deck = genanki.Deck(deck_id, deck_name)
 
     for card in cards:
+        tags = list(card.tags)
+        if card.nidd:
+            tags.append(card.nidd)
         note = genanki.Note(
             model=_MODEL,
-            fields=[card.question, card.answer],
-            tags=card.tags,
+            fields=[card.question, card.answer_clean],
+            tags=tags,
         )
         deck.add_note(note)
 

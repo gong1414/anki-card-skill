@@ -42,8 +42,9 @@ def test_export_tsv_tab_separated():
     parts = first_line.split("\t")
     assert len(parts) == 3  # question, answer, tags
     assert parts[0] == "<b>Q1</b>"
-    assert parts[1] == "A1<br><br>nidd123"
-    assert parts[2] == "tag1::sub"
+    assert parts[1] == "A1"  # nidd stripped from answer
+    assert "tag1::sub" in parts[2]
+    assert "nidd123" in parts[2]  # nidd moved to tags
     path.unlink()
 
 
