@@ -41,7 +41,11 @@ def main(argv: list[str] | None = None) -> None:
     if args.input == "-":
         text = sys.stdin.read()
     else:
-        text = Path(args.input).read_text(encoding="utf-8")
+        input_path = Path(args.input)
+        if not input_path.exists():
+            print(f"Error: file not found: {args.input}", file=sys.stderr)
+            sys.exit(1)
+        text = input_path.read_text(encoding="utf-8")
 
     cards = parse_cards(text)
 

@@ -71,7 +71,7 @@ def _split_card_line(line: str) -> tuple[str, str, str] | None:
     question = rest[:second_pipe].strip()
     answer = rest[second_pipe + 1 :].strip()
 
-    if not question and not answer:
+    if not question or not answer:
         return None
 
     return question, answer, tags_str

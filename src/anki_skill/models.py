@@ -16,9 +16,9 @@ class Card:
 
     @property
     def nidd(self) -> str:
-        """Extract nidd identifier from answer, or empty string."""
-        m = re.search(r"nidd\d+", self.answer)
-        return m.group(0) if m else ""
+        """Extract nidd identifier from end of answer, or empty string."""
+        m = re.search(r"nidd\d+\s*$", self.answer)
+        return m.group(0).strip() if m else ""
 
     @property
     def answer_clean(self) -> str:
