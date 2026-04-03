@@ -49,12 +49,26 @@ Card 2 question | Card 2 answer | Card 2 tags
 
 **Note:** Place all cards in a single table for easy copying.
 
-### Step 5: Export
+### Step 5: Review
 
-After generating cards, automatically export:
+Before exporting, present the generated cards to the user for review:
+
+1. Ask the user to review the card table — they can request edits, deletions, or additions.
+2. If the user requests changes, revise the cards and present the updated table.
+3. Only proceed to export after the user confirms the cards are satisfactory.
+4. If the user says "skip review" or "直接导出", proceed to export immediately.
+
+**Why this matters:** AI-generated cards may contain inaccuracies. A brief review step ensures the user doesn't learn incorrect information through spaced repetition.
+
+### Step 6: Export
+
+After the user confirms the cards, export:
 
 1. Write the card table text to a temp file (e.g., `/tmp/anki_cards_<timestamp>.txt`).
-2. Ask the user for export format (tsv or apkg) and output path. Default: `.tsv` in the current working directory.
+2. Ask the user for export method and format:
+   - **TSV** (default) — `.tsv` file for manual Anki import
+   - **APKG** — portable `.apkg` deck file
+   - **AnkiConnect** — push directly to a running Anki instance (requires AnkiConnect add-on)
 3. Run the export command:
 
 ```bash
@@ -63,9 +77,12 @@ anki-export /tmp/anki_cards_<timestamp>.txt -f tsv -o <output_path>.tsv
 
 # APKG export (portable deck file)
 anki-export /tmp/anki_cards_<timestamp>.txt -f apkg -o <output_path>.apkg -d "<deck_name>"
+
+# AnkiConnect (push directly to Anki — requires Anki running with AnkiConnect add-on)
+anki-export /tmp/anki_cards_<timestamp>.txt --ankiconnect -d "<deck_name>"
 ```
 
-4. Report the result and file path to the user.
+4. Report the result and file path (or push count) to the user.
 
 ---
 
