@@ -35,6 +35,11 @@ def main(argv: list[str] | None = None) -> None:
         default="AnkiSkill Export",
         help="Deck name for APKG export (default: 'AnkiSkill Export').",
     )
+    parser.add_argument(
+        "-v", "--verbose",
+        action="store_true",
+        help="Show skipped lines and additional details.",
+    )
 
     args = parser.parse_args(argv)
 
@@ -47,7 +52,7 @@ def main(argv: list[str] | None = None) -> None:
             sys.exit(1)
         text = input_path.read_text(encoding="utf-8-sig")
 
-    cards = parse_cards(text)
+    cards = parse_cards(text, verbose=args.verbose)
 
     if not cards:
         print("Error: no cards parsed from input.", file=sys.stderr)

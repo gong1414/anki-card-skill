@@ -102,3 +102,16 @@ def test_cli_utf8_bom_input(tmp_path):
     content = output_file.read_text(encoding="utf-8")
     assert not content.startswith("\ufeff")
     assert "Q1" in content
+
+
+def test_cli_verbose_shows_skipped_lines():
+    """--verbose should report skipped lines to stderr."""
+    with tempfile.NamedTemporaryFile(suffix=".txt", delete=False, mode="w") as f:
+        f.write("Q1 | A1 | tag1\nmalformed line\nQ2 | A2 | tag2\n")
+        path = Path(f.name)
+    output = Path(tempfile.mktemp(suffix=".tsv"))
+    result = _run_cli(str(path), "-f", "tsv", "-o", str(output), "--verbose")
+    assert result.returncode == 0
+    assert "skipped" in result.stderr.lower() or "skip" in result.stderr.lower()
+    path.unlink()
+    output.unlink()

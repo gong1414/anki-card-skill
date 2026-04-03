@@ -5,7 +5,7 @@ from __future__ import annotations
 from anki_skill.models import Card
 
 
-def parse_cards(text: str) -> list[Card]:
+def parse_cards(text: str, verbose: bool = False) -> list[Card]:
     """Parse pipe-delimited card text into a list of Card objects.
 
     Expected format per line:
@@ -16,8 +16,9 @@ def parse_cards(text: str) -> list[Card]:
     Tags are space-separated within the tags field.
     """
     cards: list[Card] = []
+    skipped: list[tuple[int, str]] = []
 
-    for line in text.splitlines():
+    for line_num, line in enumerate(text.splitlines(), 1):
         line = line.strip()
         if not line:
             continue
@@ -26,11 +27,18 @@ def parse_cards(text: str) -> list[Card]:
 
         parts = _split_card_line(line)
         if parts is None:
+            skipped.append((line_num, line))
             continue
 
         question, answer, tags_str = parts
         tags = tags_str.split() if tags_str else []
         cards.append(Card(question=question, answer=answer, tags=tags))
+
+    if verbose and skipped:
+        import sys
+        for line_num, line in skipped:
+            preview = line[:60] + "..." if len(line) > 60 else line
+            print(f"  Skipped line {line_num}: {preview}", file=sys.stderr)
 
     return cards
 
